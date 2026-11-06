@@ -245,6 +245,7 @@ def log_event(event, resource_id=None, org_id=None, user_id=None):
                          user_id=user_id if user_id is not None else session.get('uid')))
 
 
+
 def current_user():
     uid = session.get('uid')
 
@@ -262,6 +263,7 @@ def current_user():
         return None
 
     return user
+
 
 
 @app.context_processor
