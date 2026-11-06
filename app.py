@@ -247,19 +247,21 @@ def log_event(event, resource_id=None, org_id=None, user_id=None):
 
 
 
+
 def current_user():
     uid = session.get('uid')
 
-    if not uid:
+    if uid is None:
         return None
 
     user = db.session.get(User, uid)
 
-    if not user or not user.active:
+    if user is None or not user.active:
         return None
 
-    if user.role != 'superadmin' and user.org_id != session.get('org_id'):
-        return None
+    if user.role != 'superadmin':
+        if user.org_id != session.get('org_id'):
+            return None
 
     return user
 
