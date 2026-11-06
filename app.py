@@ -341,7 +341,7 @@ def parse_fields(groups):
 def security_headers(resp):
     resp.headers['X-Content-Type-Options'] = 'nosniff'
     resp.headers['X-Frame-Options'] = 'DENY'
-    resp.headers['Referrer-Policy'] = 'no-referrer'
+response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
     resp.headers['Cache-Control'] = 'no-store'
     resp.headers['Content-Security-Policy'] = "default-src 'self'; style-src 'self'; script-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'self'"
     if IS_PRODUCTION: resp.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
