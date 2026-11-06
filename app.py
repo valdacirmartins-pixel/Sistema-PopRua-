@@ -348,8 +348,14 @@ def security_headers(resp):
 def health(): return jsonify(status='ok')
 
 @app.route('/login', methods=['GET', 'POST'])
+
 def login():
+    if request.method == 'GET':
+        session.permanent = True
+        session.setdefault('login_session', secrets.token_urlsafe(16))
+
     if request.method == 'POST':
+
         email = request.form.get('email', '').strip().lower()
         pw = request.form.get('password', '')
         user = User.query.filter_by(email=email).first()
