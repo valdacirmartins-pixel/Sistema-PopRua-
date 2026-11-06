@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="topline">
+  <div>
+    <p class="eyebrow">RELATÓRIOS INSTITUCIONAIS</p>
+    <h1>Relatórios em PDF</h1>
+    <p>Emita fichas preenchidas dos atendimentos e relatórios consolidados por período e unidade.</p>
+  </div>
+</div>
+<div class="panel">
+  <h2>Filtrar relatórios</h2>
+  <form method="get" action="{{ url_for('report_pdf_quant') }}">
+    <div class="fields">
+      <label>Data inicial
+        <input type="date" name="inicio" value="{{ inicio }}" required>
+      </label>
+      <label>Data final
+        <input type="date" name="fim" value="{{ fim }}" required>
+      </label>
+      <label>Unidade
+        <select name="unidade">
+          {% if me.role == 'gestor' %}
+          <option value="todas">Todas as unidades da minha organização</option>
+          {% endif %}
+          {% for unit in units %}
+          <option value="{{ unit.id }}" {% if selected_unit and selected_unit.id == unit.id %}selected{% endif %}>{{ unit.name }} - {{ unit.city }}/{{ unit.uf }}</option>
+          {% endfor %}
+        </select>
+      </label>
+    </div>
+    <p>O relatório quantitativo inclui atendimentos registrados, pessoas distintas, novos cadastros, resultados, tipos e distribuição por unidade.</p>
+    <div class="actions">
+      <button class="primary" type="submit" formaction="{{url_for('report_pdf_quant')}}">Baixar quantitativo (PDF)</button>
+      {% if me.role != 'leitor' %}
+      <button type="submit" formaction="{{url_for('report_pdf_records')}}">Baixar listagem de registros (PDF)</button>
+      {% endif %}
+    </div>
+  </form>
+</div>
+<div class="panel">
+  <h2>Fichas preenchidas de cada pessoa</h2>
+  <p>Para emitir o <strong>PDF do cadastro</strong> ou o <strong>PDF de um atendimento específico</strong>, abra <a href="{{url_for('people')}}">Pessoas</a>, selecione um cadastro e use os botões da página de histórico.</p>
+  <p>As fichas detalhadas contêm dados pessoais e são liberadas apenas para profissionais autorizados. O relatório quantitativo não inclui CPF ou nome de pessoas atendidas.</p>
+</div>
+{% endblock %}
