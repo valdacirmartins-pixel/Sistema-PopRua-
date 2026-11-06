@@ -244,16 +244,25 @@ def log_event(event, resource_id=None, org_id=None, user_id=None):
                          org_id=org_id if org_id is not None else session.get('org_id'),
                          user_id=user_id if user_id is not None else session.get('uid')))
 
+
 def current_user():
     uid = session.get('uid')
-    user = db.session.get(User, uid) if uid else None
+
+    if not uid:
+        return None
+
+    user = db.session.get(User, uid)
+
     if not user or not user.active:
         session.clear()
         return None
+
     if user.role != 'superadmin' and user.org_id != session.get('org_id'):
         session.clear()
         return None
+
     return user
+
 
 @app.context_processor
 def ctx():
