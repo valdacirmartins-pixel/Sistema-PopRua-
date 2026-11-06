@@ -246,6 +246,7 @@ def log_event(event, resource_id=None, org_id=None, user_id=None):
 
 
 
+
 def current_user():
     uid = session.get('uid')
 
@@ -255,11 +256,9 @@ def current_user():
     user = db.session.get(User, uid)
 
     if not user or not user.active:
-        session.clear()
         return None
 
     if user.role != 'superadmin' and user.org_id != session.get('org_id'):
-        session.clear()
         return None
 
     return user
@@ -349,14 +348,15 @@ def security_headers(resp):
 @app.route('/health')
 def health(): return jsonify(status='ok')
 
-@app.route('/login', methods=['GET', 'POST'])
 
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'GET':
         session.permanent = True
-        session.setdefault('login_session', secrets.token_urlsafe(16))
+        session['login_initialized'] = True
 
     if request.method == 'POST':
+
 
         email = request.form.get('email', '').strip().lower()
         pw = request.form.get('password', '')
