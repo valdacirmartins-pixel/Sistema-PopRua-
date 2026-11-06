@@ -625,12 +625,51 @@ def change_password():
             return redirect(url_for('login'))
     return render_template('password.html')
 
+
 @app.errorhandler(403)
-def error403(e): return render_template('error.html', message='Acesso não autorizado.'), 403
+def error403(e):
+    return render_template(
+        'error.html',
+        message='Acesso não autorizado.'
+    ), 403
+
+
 @app.errorhandler(404)
-def error404(e): return render_template('error.html', message='Registro não encontrado.'), 404
+def error404(e):
+    return render_template(
+        'error.html',
+        message='Registro não encontrado.'
+    ), 404
+
+
+@app.errorhandler(CSRFError)
+def handle_csrf_error(e):
+    cookie_name = app.config.get(
+        'SESSION_COOKIE_NAME', 'session'
+    )
+
+    logging.warning(
+        "DIAGNOSTICO_CSRF: motivo=%s | cookie=%s | "
+        "token_na_sessao=%s | rota=%s",
+        e.description,
+        bool(request.cookies.get(cookie_name)),
+        'csrf_token' in session,
+        request.path
+    )
+
+    return render_template(
+        'error.html',
+        message='Falha na validação de segurança do formulário.'
+    ), 400
+
+
 @app.errorhandler(400)
-def error400(e): return render_template('error.html', message='Requisição inválida.'), 400
+def error400(e):
+    return render_template(
+        'error.html',
+        message='Requisição inválida.'
+    ), 400
+
 
 
 def bootstrap():
