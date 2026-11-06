@@ -702,6 +702,13 @@ def bootstrap():
                     db.session.rollback()
             # REMOVA a variável BOOTSTRAP_ADMIN_PASSWORD após o provisionamento.
 
+
+# Relatórios PDF: módulo independente; mantém intacto o fluxo de login.
+from reports_pdf import register_pdf_routes
+register_pdf_routes(app, db, Person, Attendance, Unit, Organization, User,
+                    roles, current_user, org_scope, accessible_units,
+                    get_person, decrypt_dict, log_event, FIELDS, ATTENDANCE_FIELDS)
+
 bootstrap()
 if __name__ == '__main__':
     app.run(debug=not IS_PRODUCTION, port=int(os.getenv('PORT','5000')), host='0.0.0.0')
