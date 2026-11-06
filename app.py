@@ -12,7 +12,7 @@ from functools import wraps
 from cryptography.fernet import Fernet, InvalidToken
 from flask import (Flask, render_template, request, redirect, url_for, flash,
                    session, abort, Response, jsonify)
-from flask_wtf.csrf import CSRFProtect
+from flask_wtf.csrf import CSRFProtect, CSRFError
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func
 from sqlalchemy.exc import IntegrityError
