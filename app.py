@@ -337,15 +337,27 @@ def parse_fields(groups):
             data[key] = value
     return data
 
+
 @app.after_request
 def security_headers(resp):
     resp.headers['X-Content-Type-Options'] = 'nosniff'
     resp.headers['X-Frame-Options'] = 'DENY'
-response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+    resp.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
     resp.headers['Cache-Control'] = 'no-store'
-    resp.headers['Content-Security-Policy'] = "default-src 'self'; style-src 'self'; script-src 'self'; form-action 'self'; frame-ancestors 'none'; base-uri 'self'"
-    if IS_PRODUCTION: resp.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
+    resp.headers['Content-Security-Policy'] = (
+        "default-src 'self'; "
+        "style-src 'self'; "
+        "script-src 'self'; "
+        "form-action 'self'; "
+        "frame-ancestors 'none'; "
+        "base-uri 'self'"
+    )
+    if IS_PRODUCTION:
+        resp.headers['Strict-Transport-Security'] = (
+            'max-age=31536000; includeSubDomains'
+        )
     return resp
+
 
 @app.route('/health')
 def health(): return jsonify(status='ok')
